@@ -20,10 +20,10 @@ public class MaskShaderController : MonoBehaviour
         _MaskRenderer.material.SetFloat("_Brightness", MS_Brightness);
         _MaskRenderer.material.SetFloat("_Saturation", MS_Saturation);
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.F))
             MS_Brightness -= 0.1f;
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.D))
             MS_Brightness += 0.1f;
 
         if (Input.GetKeyDown(KeyCode.S))
