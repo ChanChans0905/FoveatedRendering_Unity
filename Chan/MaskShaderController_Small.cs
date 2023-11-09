@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaskShaderController : MonoBehaviour
+public class MaskShaderController_Small : MonoBehaviour
 {
-
     public Material MaskShader;
     private Renderer _MaskRenderer;
     public float MS_Brightness;
@@ -21,17 +20,17 @@ public class MaskShaderController : MonoBehaviour
         _MaskRenderer.material.SetFloat("_Brightness", MS_Brightness);
         _MaskRenderer.material.SetFloat("_Saturation", MS_Saturation);
 
-        if (Input.GetKeyDown(KeyCode.F))
-            MS_Brightness -= 0.1f;
+        //if (Input.GetKeyDown(KeyCode.C))
+        //    MS_Brightness -= 0.01f;
 
-        if (Input.GetKeyDown(KeyCode.D))
-            MS_Brightness += 0.1f;
+        //if (Input.GetKeyDown(KeyCode.V))
+        //    MS_Brightness += 0.01f;
 
-        if (Input.GetKeyDown(KeyCode.S))
-            MS_Saturation -= 0.1f;
+        if (Input.GetKeyDown(KeyCode.C))
+            MS_Saturation -= 0.01f;
 
-        if (Input.GetKeyDown(KeyCode.A))
-            MS_Saturation += 0.1f;
+        if (Input.GetKeyDown(KeyCode.V))
+            MS_Saturation += 0.01f;
 
     }
 }
