@@ -26,10 +26,10 @@ public class MaskShaderController_Small : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.V))
         //    MS_Brightness += 0.01f;
 
-        if (Input.GetKeyDown(KeyCode.C))
-            MS_Saturation -= 0.01f;
+        if (Input.GetKeyDown(KeyCode.A))
+            MS_Saturation -= 0.02f;
 
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.B))
             MS_Saturation += 0.01f;
 
     }

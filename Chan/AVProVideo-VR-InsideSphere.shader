@@ -9,6 +9,9 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 		_Saturation ("Saturation", Range(0,5)) = 0
 		_Brightness ("Brightness", Range(-1,1)) = 0
 
+        _GazePoint ("Gaze Point", Vector) = (0,0,0,0)
+        _GazeRadius ("Gaze Radius", Float) = 25.0
+
 		[KeywordEnum(None, Top_Bottom, Left_Right, Custom_UV)] Stereo ("Stereo Mode", Float) = 0
 		[KeywordEnum(None, Left, Right)] ForceEye ("Force Eye Mode", Float) = 0
 		[Toggle(STEREO_DEBUG)] _StereoDebug ("Stereo Debug Tinting", Float) = 0
@@ -69,6 +72,7 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 			struct v2f
 			{
 				float4 vertex : SV_POSITION; // clip space position
+				float3 worldPos : TEXCOORD1;
 #if HIGH_QUALITY
 				float3 normal : TEXCOORD0;
 				
@@ -103,15 +107,20 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 			float _Saturation;
 			float _Brightness;
 
+			float4 _GazePoint;
+			float _GazeRadius;
+
 			v2f vert (appdata v)
 			{
 				v2f o;
+				o.vertex = UnityObjectToClipPos(v.vertex);
 
 #ifdef UNITY_STEREO_INSTANCING_ENABLED
 				UNITY_SETUP_INSTANCE_ID(v);						// calculates and sets the built-n unity_StereoEyeIndex and unity_InstanceID Unity shader variables to the correct values based on which eye the GPU is currently rendering
 				UNITY_INITIALIZE_OUTPUT(v2f, o);				// initializes all v2f values to 0
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);		// tells the GPU which eye in the texture array it should render to
 #endif
+
 
 				o.vertex = XFormObjectToClip(v.vertex);
 
@@ -150,6 +159,10 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 
 				UNITY_TRANSFER_FOG(o, o.vertex);
 
+	
+				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+	
 				return o;
 			}
 
@@ -182,6 +195,18 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float2 uv;
+	
+				// Calculate the distance in world space
+				float distancebet = distance(i.worldPos, _GazePoint.xyz);
+                // Brightness calculation based on distance
+				float brightness = 1.0;
+				if (distancebet > _GazeRadius)
+					{
+						brightness -= (distancebet - _GazeRadius) * 0.01;
+						brightness = max(brightness, 0);
+					}
+				float4 color = tex2D(_MainTex, i.uv)*brightness;
+				//return color * brightness;
 
 #if HIGH_QUALITY
 				float3 n = normalize(i.normal);
@@ -214,10 +239,10 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 #if STEREO_DEBUG
 				col *= i.tint;
 #endif
-				col.rgb = HueShift(col.rgb);
+				color.rgb = HueShift(color.rgb);
 
 				UNITY_APPLY_FOG(i.fogCoord, col);
-				return fixed4(col.rgb, 1.0);
+				return fixed4(color.rgb, 1.0);
 			}
 			ENDCG
 		}

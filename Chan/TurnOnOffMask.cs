@@ -11,7 +11,7 @@ public class TurnOnOffMask : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             VideoMeshForMask_Big.SetActive(true);
             VideoMeshForMask_Small.SetActive(true);
@@ -20,12 +20,12 @@ public class TurnOnOffMask : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            VideoMeshForMask_Big.SetActive(false);
-            VideoMeshForMask_Small.SetActive(false);
-            Mask_Small.SetActive(false);
-            Mask_Big.SetActive(false);
-        }
+        //if (Input.GetKeyDown(KeyCode.W))
+        //{
+        //    VideoMeshForMask_Big.SetActive(false);
+        //    VideoMeshForMask_Small.SetActive(false);
+        //    Mask_Small.SetActive(false);
+        //    Mask_Big.SetActive(false);
+        //}
     }
 }

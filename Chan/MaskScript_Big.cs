@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class MaskScript_Big : MonoBehaviour
 {
-    public GameObject[] MaskObject;
+    public GameObject MiddleRegionMesh;
 
     void Start()
     {
-        for (int i = 0; i < MaskObject.Length; i++)
-        {
-            MaskObject[i].GetComponent<MeshRenderer>().material.renderQueue = 3002;
-        }
+        MiddleRegionMesh.GetComponent<MeshRenderer>().material.renderQueue = 3002;
     }
 }
