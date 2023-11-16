@@ -14,7 +14,7 @@ public class GazePointCoorToShader : MonoBehaviour
         Material myMaterial = GetComponent<Renderer>().material;
         myMaterial.SetVector("_GazePoint", new Vector4(gazePoint.x, gazePoint.y, gazePoint.z, 0));
         
-        float gazeRadius = 50f;
+        float gazeRadius = 70f;
         if (Input.GetKeyDown(KeyCode.S))
             myMaterial.SetFloat("_GazeRadius", gazeRadius);
 
