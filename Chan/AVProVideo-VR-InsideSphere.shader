@@ -11,6 +11,7 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 
         _GazePoint ("Gaze Point", Vector) = (0,0,0,0)
         _GazeRadius ("Gaze Radius", Float) = 25.0
+		_GazeRadius_Color ("Gaze Radius for Color", FLoat) = 0
 
 		[KeywordEnum(None, Top_Bottom, Left_Right, Custom_UV)] Stereo ("Stereo Mode", Float) = 0
 		[KeywordEnum(None, Left, Right)] ForceEye ("Force Eye Mode", Float) = 0
@@ -109,6 +110,7 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 
 			float4 _GazePoint;
 			float _GazeRadius;
+			float _GazeRadius_Color;
 
 			v2f vert (appdata v)
 			{
@@ -205,6 +207,13 @@ Shader "AVProVideo/VR/InsideSphere Unlit (stereo+fog)"
 						brightness -= (distancebet - _GazeRadius) * 0.01;
 						brightness = max(brightness, 0);
 					}
+
+				if(distancebet > _GazeRadius_Color)
+				{
+					brightness -= (distancebet - _GazeRadius_Color) * 0.01;
+					brightness = max(brightness, 0);
+				}
+
 				float4 color = tex2D(_MainTex, i.uv)*brightness;
 				//return color * brightness;
 
