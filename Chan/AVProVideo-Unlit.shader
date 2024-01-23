@@ -66,7 +66,7 @@
 #endif
 			uniform float4 _MainTex_ST;
 			uniform fixed4 _Color;
-float _DownscaleFactor;
+			float _DownscaleFactor;
 
 			v2f vert (appdata v)
 			{
@@ -77,9 +77,9 @@ float _DownscaleFactor;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);				// initializes all v2f values to 0
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);		// tells the GPU which eye in the texture array it should render to
 #endif
-    o.vertex = UnityObjectToClipPos(v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.uv = v.uv;
 				o.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
-    o.uv.xy = float2(1.0 - o.uv.x, o.uv.y);
 
 #if STEREO_TOP_BOTTOM | STEREO_LEFT_RIGHT
 				float4 scaleOffset = GetStereoScaleOffset(IsStereoEyeLeft(), _MainTex_ST.y < 0.0);
@@ -104,25 +104,30 @@ float _DownscaleFactor;
 			fixed4 frag (v2f i) : SV_Target
 			{
 	
-	                // Divide UV into an 8x8 grid
-    float2 gridUV = i.uv * float2(8.0, 8.0);
-                
-                // Calculate grid position
-    float2 gridPosition = floor(gridUV);
-    float2 uv = i.uv;
-                
-                // Check if the pixel is in areas 20 to 40
-    bool deteriorateQuality = (gridPosition.x >= 0.0 && gridPosition.x <= 4.0 && gridPosition.y >= 0.0 && gridPosition.y <= 4.0);
-                
-                // Modify UV coordinates for areas 20 to 40
-    if (deteriorateQuality)
-    {
-                    // Scale down the UV coordinates
-        uv *= _DownscaleFactor;
-        uv = floor(uv) / _DownscaleFactor;
-    }
-    fixed4 col = tex2D(_MainTex, uv);
-    return col;
+	 // Show Region
+    // fixed4 col;
+    // float2 gridUV = i.uv * float2(8.0, 8.0);
+    // float2 gridPosition = floor(gridUV);
+    // float3 color = float3(gridPosition.x / 7.0, 0, gridPosition.y / 7.0);
+    // fixed4 finalColor = fixed4(color, 1.0);
+    // return finalColor;
+	
+	// DownScale
+   float2 gridUV = i.uv * float2(8.0, 8.0);
+   float2 gridPosition = floor(gridUV);
+   float2 uv = i.uv;
+   bool deteriorateQuality = (gridPosition.x < 1.0 || gridPosition.x > 6.0 || gridPosition.y < 1.0 || gridPosition.y > 6.0);
+   if (deteriorateQuality)
+   {
+uv 0 ~ 1
+0.001 없는 것으로 치겠다
+
+       uv *= _DownscaleFactor;
+       uv = floor(uv) / _DownscaleFactor;
+   }
+   fixed4 col = tex2D(_MainTex, uv);
+   return col;
+	
 #if USE_YPCBCR
 				col = SampleYpCbCr(_MainTex, _ChromaTex, i.uv.xy, _YpCbCrTransform);
 #else
