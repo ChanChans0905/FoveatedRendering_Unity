@@ -117,14 +117,13 @@
    float2 gridPosition = floor(gridUV);
    float2 uv = i.uv;
    bool deteriorateQuality = (gridPosition.x < 1.0 || gridPosition.x > 6.0 || gridPosition.y < 1.0 || gridPosition.y > 6.0);
+   bool deteriorateQuality2 = (gridPosition.x == 1.0 || gridPosition.x == 6.0)
    if (deteriorateQuality)
    {
-uv 0 ~ 1
-0.001 없는 것으로 치겠다
-
        uv *= _DownscaleFactor;
        uv = floor(uv) / _DownscaleFactor;
    }
+   
    fixed4 col = tex2D(_MainTex, uv);
    return col;
 	
